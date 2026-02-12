@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Ticketing App</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
+<?php $pageTitle = "Connexion - Ticketing App"; include 'header.php'; ?>
 
+<body>
     <div class="login-container">
         <div class="login-card">
             <div style="text-align: center; margin-bottom: 2rem;">
