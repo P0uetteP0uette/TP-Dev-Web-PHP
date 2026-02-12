@@ -98,9 +98,5 @@
             </aside>
 
         </div>
-
     </main>
-</div>
-<script src="assets/js/script.js"></script>
-</body>
-</html>
+<?php include 'footer.php'; ?>
