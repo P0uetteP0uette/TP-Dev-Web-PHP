@@ -8,14 +8,14 @@
     <nav class="sidebar">
         <h2>Ticketing App</h2>
         <ul>
-            <li><a href="dashboard.html">📊 Tableau de bord</a></li>
-            <li><a href="projects.html">📁 Projets</a></li>
-            <li><a href="tickets.html">🎫 Tickets</a></li>
+            <li><a href="dashboard.php">📊 Tableau de bord</a></li>
+            <li><a href="projects.php">📁 Projets</a></li>
+            <li><a href="tickets.php">🎫 Tickets</a></li>
             
-            <li><a href="profile.html" class="active">👤 Mon Profil</a></li>
-            <li><a href="settings.html">⚙️ Paramètres</a></li>
+            <li><a href="profile.php" class="active">👤 Mon Profil</a></li>
+            <li><a href="settings.php">⚙️ Paramètres</a></li>
 
-            <li><a href="index.html" class="btn-logout">🚪 Déconnexion</a></li>
+            <li><a href="index.php" class="btn-logout">🚪 Déconnexion</a></li>
         </ul>
     </nav>
 

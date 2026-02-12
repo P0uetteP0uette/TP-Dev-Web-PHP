@@ -11,20 +11,20 @@
     <nav class="sidebar">
         <h2>Ticketing App</h2>
         <ul>
-            <li><a href="dashboard.html" class="active">📊 Tableau de bord</a></li>
-            <li><a href="projects.html">📁 Projets</a></li>
-            <li><a href="tickets.html">🎫 Tickets</a></li>
+            <li><a href="dashboard.php" class="active">📊 Tableau de bord</a></li>
+            <li><a href="projects.php">📁 Projets</a></li>
+            <li><a href="tickets.php">🎫 Tickets</a></li>
             
-            <li><a href="profile.html">👤 Mon Profil</a></li>
-            <li><a href="settings.html">⚙️ Paramètres</a></li>
+            <li><a href="profile.php">👤 Mon Profil</a></li>
+            <li><a href="settings.php">⚙️ Paramètres</a></li>
 
-            <li><a href="index.html" class="btn-logout">🚪 Déconnexion</a></li>
+            <li><a href="index.php" class="btn-logout">🚪 Déconnexion</a></li>
         </ul>
     </nav>
 
     <main class="main-content">
         <header class="page-header">
-            <h1>Bonjour, <a href="profile.html" style="text-decoration: underline; text-decoration-color: #ccc;">Admin</a> 👋</h1>
+            <h1>Bonjour, <a href="profile.php" style="text-decoration: underline; text-decoration-color: #ccc;">Admin</a> 👋</h1>
             <p>Voici un aperçu de l'activité.</p>
         </header>
 

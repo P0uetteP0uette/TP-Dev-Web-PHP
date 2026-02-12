@@ -9,7 +9,7 @@
                 <p class="text-muted">Entrez votre email, nous vous enverrons un lien de réinitialisation.</p>
             </div>
 
-            <form action="index.html"> <div class="form-group">
+            <form action="index.php"> <div class="form-group">
                     <label for="email">Email associé au compte</label>
                     <input type="email" id="email" placeholder="nom@entreprise.com" required>
                 </div>
@@ -17,7 +17,7 @@
                 <button type="submit" class="btn mb-1">Envoyer le lien</button>
                 
                 <div style="text-align: center; font-size: 0.9rem;">
-                    <a href="index.html" class="text-muted">← Retour à la connexion</a>
+                    <a href="index.php" class="text-muted">← Retour à la connexion</a>
                 </div>
             </form>
         </div>

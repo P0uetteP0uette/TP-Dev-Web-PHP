@@ -8,7 +8,7 @@
                 <p class="text-muted">Accédez à votre espace de gestion.</p>
             </div>
 
-            <form action="dashboard.html">
+            <form action="dashboard.php">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" placeholder="nom@entreprise.com" required>
@@ -16,7 +16,7 @@
                 <div class="form-group">
                     <div class="d-flex" style="justify-content: space-between; align-items: center;">
                         <label for="password" style="margin:0;">Mot de passe</label>
-                        <a href="forgot-password.html" style="font-size: 0.85rem; color: var(--primary-color);">Mot de passe oublié ?</a>
+                        <a href="forgot-password.php" style="font-size: 0.85rem; color: var(--primary-color);">Mot de passe oublié ?</a>
                     </div>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
@@ -24,7 +24,7 @@
                 <button type="submit" class="btn mb-1">Se connecter</button>
 
                 <div style="text-align: center; font-size: 0.9rem;">
-                    Pas encore de compte ? <a href="register.html" class="text-primary" style="font-weight: bold;">S'inscrire</a>
+                    Pas encore de compte ? <a href="register.php" class="text-primary" style="font-weight: bold;">S'inscrire</a>
                 </div>
             </form>
         </div>

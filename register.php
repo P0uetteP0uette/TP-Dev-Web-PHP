@@ -9,7 +9,7 @@
                 <p class="text-muted">Rejoignez l'équipe pour gérer vos tickets.</p>
             </div>
 
-            <form action="dashboard.html">
+            <form action="dashboard.php">
                 
                 <div class="d-flex gap-1 mobile-col">
                     <div class="form-group flex-1">
@@ -40,7 +40,7 @@
                 <button type="submit" class="btn mb-1">S'inscrire</button>
                 
                 <div style="text-align: center; font-size: 0.9rem;">
-                    Déjà un compte ? <a href="index.html" class="text-primary" style="font-weight: bold;">Se connecter</a>
+                    Déjà un compte ? <a href="index.php" class="text-primary" style="font-weight: bold;">Se connecter</a>
                 </div>
             </form>
         </div>
