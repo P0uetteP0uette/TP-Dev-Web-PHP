@@ -1,4 +1,10 @@
-<?php $pageTitle = "Paramètres - Ticketing App"; include 'header.php'; ?>
+<?php 
+session_start();
+if (!isset($_SESSION['user'])) { header('Location: index.php'); exit; }
+
+$pageTitle = "Paramètres - Ticketing App"; 
+include 'header.php'; 
+?>
 
 <body>
 
@@ -11,11 +17,9 @@
             <li><a href="dashboard.php">📊 Tableau de bord</a></li>
             <li><a href="projects.php">📁 Projets</a></li>
             <li><a href="tickets.php">🎫 Tickets</a></li>
-            
             <li><a href="profile.php">👤 Mon Profil</a></li>
             <li><a href="settings.php" class="active">⚙️ Paramètres</a></li>
-
-            <li><a href="index.php" class="btn-logout">🚪 Déconnexion</a></li>
+            <li><a href="index.php?logout=true" class="btn-logout">🚪 Déconnexion</a></li>
         </ul>
     </nav>
 
@@ -27,48 +31,50 @@
                 <p class="text-muted">Personnalisez votre expérience.</p>
             </header>
 
-            <div class="card">
-                <h2 class="form-section-title">Notifications</h2>
-                <p class="text-muted mb-1">Choisissez quand vous souhaitez être alerté.</p>
-                
-                <div class="form-group">
-                    <label class="checkbox-pill mb-1">
-                        <input type="checkbox" checked> M'avertir quand un ticket m'est assigné
-                    </label>
-                    <label class="checkbox-pill mb-1">
-                        <input type="checkbox" checked> M'avertir lors d'une nouvelle réponse
-                    </label>
-                    <label class="checkbox-pill mb-1">
-                        <input type="checkbox"> Recevoir le résumé hebdomadaire par email
-                    </label>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2 class="form-section-title">Préférences générales</h2>
-                
-                <div class="form-group">
-                    <label>Langue de l'interface</label>
-                    <select>
-                        <option value="fr" selected>Français</option>
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                    </select>
+            <form method="POST">
+                <div class="card">
+                    <h2 class="form-section-title">Notifications</h2>
+                    <p class="text-muted mb-1">Choisissez quand vous souhaitez être alerté.</p>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-pill mb-1">
+                            <input type="checkbox" checked> M'avertir quand un ticket m'est assigné
+                        </label>
+                        <label class="checkbox-pill mb-1">
+                            <input type="checkbox" checked> M'avertir lors d'une nouvelle réponse
+                        </label>
+                        <label class="checkbox-pill mb-1">
+                            <input type="checkbox"> Recevoir le résumé hebdomadaire par email
+                        </label>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Fuseau horaire</label>
-                    <select>
-                        <option value="paris" selected>Europe/Paris (GMT+1)</option>
-                        <option value="london">Europe/London (GMT+0)</option>
-                        <option value="ny">America/New_York (GMT-5)</option>
-                    </select>
+                <div class="card">
+                    <h2 class="form-section-title">Préférences générales</h2>
+                    
+                    <div class="form-group">
+                        <label>Langue de l'interface</label>
+                        <select>
+                            <option value="fr" selected>Français</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fuseau horaire</label>
+                        <select>
+                            <option value="paris" selected>Europe/Paris (GMT+1)</option>
+                            <option value="london">Europe/London (GMT+0)</option>
+                            <option value="ny">America/New_York (GMT-5)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-right mt-1">
+                        <button type="submit" class="btn">Sauvegarder les préférences</button>
+                    </div>
                 </div>
-                
-                <div class="text-right mt-1">
-                    <button class="btn">Sauvegarder les préférences</button>
-                </div>
-            </div>
+            </form>
 
             <div class="card" style="border: 1px solid #fee2e2;">
                 <h2 class="form-section-title" style="color: var(--danger); border-left-color: var(--danger);">Zone de danger</h2>
@@ -80,4 +86,5 @@
             </div>
 
         </div>
+    </main>
 <?php include 'footer.php'; ?>
