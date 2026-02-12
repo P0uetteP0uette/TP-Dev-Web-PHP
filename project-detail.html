@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail Projet - Ticketing App</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<button id="mobile-menu-btn" class="menu-btn">
+    <span>&#8942;</span>
+</button>
+
+<div class="app-layout">
+    
+    <nav class="sidebar">
+        <h2>Ticketing App</h2>
+        <ul>
+            <li><a href="dashboard.html">📊 Tableau de bord</a></li>
+            <li><a href="projects.html" class="active">📁 Projets</a></li>
+            <li><a href="tickets.html">🎫 Tickets</a></li>
+            <li><a href="profile.html">👤 Mon Profil</a></li>
+            <li><a href="settings.html">⚙️ Paramètres</a></li>
+            <li><a href="index.html" class="btn-logout">🚪 Déconnexion</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <div class="page-header-simple">
+            <a href="projects.html" class="link-back">← Retour aux projets</a>
+            
+            <div class="header-flex mt-1">
+                <div>
+                    <h1>Site Vitrine 2026</h1>
+                    <p class="text-muted">Client : <strong>Acme Corp</strong> • Contrat #CTR-2026-04</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-sm btn-outline">⚙️ Configurer</button>
+                    <a href="ticket-create.html" class="btn btn-sm">➕ Nouveau Ticket</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            
+            <div class="card">
+                <h2 class="card-title-simple">Consommation Heures</h2>
+                
+                <div class="stat-value">
+                    12h <span class="stat-sub">/ 50h</span>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 24%;"></div>
+                </div>
+                
+                <p class="stat-label">Il reste <strong>38h</strong> dans le forfait.</p>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title-simple">Hors Forfait (Facturable)</h2>
+                <div class="stat-value text-warning">4h</div>
+                <p class="stat-label">Tickets validés en supplément.</p>
+                <small class="text-muted">Taux horaire : 80€ / h</small>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title-simple">Collaborateurs</h2>
+                
+                <div class="avatar-group mt-1">
+                    <div class="avatar avatar-blue">AL</div>
+                    <div class="avatar avatar-green">JP</div>
+                    <div class="avatar avatar-add">+</div>
+                </div>
+                
+                <p class="stat-label mt-1">Alice L. et Jean P.</p>
+            </div>
+
+        </div>
+
+        <div class="card card-no-padding">
+            <div class="card-header-border">
+                <h2>Derniers tickets du projet</h2>
+            </div>
+            
+            <div class="table-container">
+                <table class="w-100">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sujet</th>
+                            <th>Statut</th>
+                            <th>Type</th>
+                            <th>Temps</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="ID">#1042</td>
+                            <td data-label="Sujet"><strong>Bug affichage menu</strong></td>
+                            <td data-label="Statut"><span class="badge badge-yellow">En cours</span></td>
+                            <td data-label="Type"><span class="badge badge-gray">Inclus</span></td>
+                            <td data-label="Temps">2h 30</td>
+                            <td data-label="Actions"><a href="ticket-detail.html" class="btn btn-sm btn-light">Voir</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="ID">#1039</td>
+                            <td data-label="Sujet"><strong>Module Export PDF</strong></td>
+                            <td data-label="Statut"><span class="badge badge-blue">Nouveau</span></td>
+                            <td data-label="Type"><span class="badge badge-red">Facturable</span></td>
+                            <td data-label="Temps">--</td>
+                            <td data-label="Actions"><a href="ticket-detail.html" class="btn btn-sm btn-light">Voir</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="ID">#1010</td>
+                            <td data-label="Sujet"><strong>Installation SSL</strong></td>
+                            <td data-label="Statut"><span class="badge badge-green">Terminé</span></td>
+                            <td data-label="Type"><span class="badge badge-gray">Inclus</span></td>
+                            <td data-label="Temps">1h 00</td>
+                            <td data-label="Actions"><a href="ticket-detail.html" class="btn btn-sm btn-light">Voir</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+<script src="assets/js/script.js"></script>
+</body>
+</html>
