@@ -1,6 +1,6 @@
 <?php 
-// On démarre la session au tout début
 session_start();
+require_once 'db.php'; // On se connecte à la BDD
 
 // GESTION DE LA DÉCONNEXION
 if (isset($_GET['logout'])) {
@@ -9,29 +9,32 @@ if (isset($_GET['logout'])) {
     $message = "Vous avez été déconnecté.";
 }
 
-// TRAITEMENT DU FORMULAIRE DE CONNEXION
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Simulation d'une vérification en base de données
-    // Login: admin@ticketing.app / Mot de passe: secret
-    if ($email === "admin@ticketing.app" && $password === "secret") {
+    // 1. On cherche l'utilisateur dans la base de données
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    // 2. On vérifie le mot de passe (soit haché, soit 'secret' pour notre admin de test)
+    if ($user && (password_verify($password, $user['password']) || $password === $user['password'])) {
         
-        // Connexion réussie : On enregistre l'utilisateur en session
+        // Connexion réussie : on sauvegarde dans la session
         $_SESSION['user'] = [
-            'prenom' => 'Admin',
-            'nom' => 'User',
-            'email' => $email,
-            'role' => 'Administrateur'
+            'id' => $user['id'],
+            'prenom' => $user['prenom'],
+            'nom' => $user['nom'],
+            'email' => $user['email'],
+            'role' => $user['role']
         ];
 
-        // Redirection vers le tableau de bord
         header('Location: dashboard.php');
         exit;
     } else {
-        $error = "Identifiants incorrects. (Essayez : admin@ticketing.app / secret)";
+        $error = "Identifiants incorrects.";
     }
 }
 
@@ -48,21 +51,19 @@ include 'header.php';
             </div>
 
             <?php if ($error): ?>
-                <div class="alert alert-danger" style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    <?php echo $error; ?>
-                </div>
+                <div class="alert alert-danger" style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 5px; margin-bottom: 15px;"><?php echo $error; ?></div>
             <?php endif; ?>
             
-            <?php if (isset($message)): ?>
+            <?php if (isset($message) || isset($_GET['message'])): ?>
                 <div class="alert alert-success" style="background: #d1fae5; color: #065f46; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    <?php echo $message; ?>
+                    <?php echo isset($_GET['message']) ? htmlspecialchars($_GET['message']) : $message; ?>
                 </div>
             <?php endif; ?>
 
             <form action="index.php" method="POST">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="admin@ticketing.app" value="admin@ticketing.app" required>
+                    <input type="email" id="email" name="email" placeholder="admin@ticketing.app" required>
                 </div>
                 <div class="form-group">
                     <div class="d-flex" style="justify-content: space-between; align-items: center;">

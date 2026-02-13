@@ -1,62 +1,31 @@
 <?php 
 session_start();
+require_once 'db.php';
 
-// SÉCURITÉ : Si l'utilisateur n'est pas connecté, on le renvoie au login
-if (!isset($_SESSION['user'])) {
-    header('Location: index.php');
-    exit;
-}
+if (!isset($_SESSION['user'])) { header('Location: index.php'); exit; }
 
-$pageTitle = "Tableau de bord - Ticketing App"; 
+// On récupère les vrais chiffres de la BDD
+$nbTickets = $pdo->query("SELECT COUNT(*) FROM tickets")->fetchColumn();
+$nbProjets = $pdo->query("SELECT COUNT(*) FROM projects WHERE statut = 'Actif'")->fetchColumn();
+$nbUrgences = $pdo->query("SELECT COUNT(*) FROM tickets WHERE priorite = 'Haute' OR priorite = 'Critique'")->fetchColumn();
 
-// DONNÉES SIMULÉES (Pour les stats)
-$tickets = [
-    ["statut" => "En cours", "priorite" => "Haute"],
-    ["statut" => "Terminé", "priorite" => "Basse"],
-    ["statut" => "Nouveau", "priorite" => "Critique"],
-    ["statut" => "En attente", "priorite" => "Moyenne"],
-    ["statut" => "En cours", "priorite" => "Moyenne"]
-];
-
-$projects = [
-    ["statut" => "Actif"],
-    ["statut" => "Actif"],
-    ["statut" => "Épuisé"],
-    ["statut" => "Actif"]
-];
-
-// CALCULS
-$nbTicketsTotal = count($tickets);
-$nbProjetsTotal = count($projects);
-$nbUrgences = 0;
-foreach ($tickets as $t) {
-    if ($t['priorite'] === 'Haute' || $t['priorite'] === 'Critique') $nbUrgences++;
-}
-
-// Récupération du prénom depuis la session
 $prenomUser = $_SESSION['user']['prenom'];
-
+$pageTitle = "Tableau de bord - Ticketing App";
 include 'header.php'; 
 ?>
 
 <body>
-
-<button id="mobile-menu-btn" class="menu-btn">
-    <span>&#8942;</span>
-</button>
+<button id="mobile-menu-btn" class="menu-btn"><span>&#8942;</span></button>
 
 <div class="app-layout">
-    
     <nav class="sidebar">
         <h2>Ticketing App</h2>
         <ul>
             <li><a href="dashboard.php" class="active">📊 Tableau de bord</a></li>
             <li><a href="projects.php">📁 Projets</a></li>
             <li><a href="tickets.php">🎫 Tickets</a></li>
-            
             <li><a href="profile.php">👤 Mon Profil</a></li>
             <li><a href="settings.php">⚙️ Paramètres</a></li>
-
             <li><a href="index.php?logout=true" class="btn-logout">🚪 Déconnexion</a></li>
         </ul>
     </nav>
@@ -70,7 +39,7 @@ include 'header.php';
         <section class="d-flex gap-1">
             <div class="stat-card">
                 <h2>Tickets Totaux</h2>
-                <p class="stat-value text-primary"><?php echo $nbTicketsTotal; ?></p>
+                <p class="stat-value text-primary"><?php echo $nbTickets; ?></p>
             </div>
 
             <div class="stat-card">
@@ -80,9 +49,9 @@ include 'header.php';
 
             <div class="stat-card">
                 <h2>Projets actifs</h2>
-                <p class="stat-value text-success"><?php echo $nbProjetsTotal; ?></p>
+                <p class="stat-value text-success"><?php echo $nbProjets; ?></p>
             </div>
         </section>
-        
-        </main>
+    </main>
+</div>
 <?php include 'footer.php'; ?>

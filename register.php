@@ -1,9 +1,28 @@
 <?php 
-// TRAITEMENT INSCRIPTION
+require_once 'db.php';
+
+$error = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Simulation : Inscription réussie
-    header('Location: index.php?message=Compte créé ! Connectez-vous.');
-    exit;
+    $prenom = $_POST['prenom'];
+    $nom = $_POST['nom'];
+    $email = $_POST['email'];
+    
+    // On sécurise le mot de passe avant de l'envoyer en BDD !
+    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    // On insère l'utilisateur en BDD
+    $stmt = $pdo->prepare("INSERT INTO users (prenom, nom, email, password) VALUES (?, ?, ?, ?)");
+    
+    try {
+        $stmt->execute([$prenom, $nom, $email, $password_hash]);
+        // Redirection vers l'accueil avec un message
+        header('Location: index.php?message=Compte créé avec succès ! Connectez-vous.');
+        exit;
+    } catch (PDOException $e) {
+        // Si l'email existe déjà dans la BDD (car on a mis UNIQUE sur l'email)
+        $error = "Cet email est déjà utilisé !";
+    }
 }
 
 $pageTitle = "Inscription - Ticketing App"; 
@@ -11,7 +30,6 @@ include 'header.php';
 ?>
 
 <body>
-
     <div class="login-container">
         <div class="login-card">
             <div style="text-align: center; margin-bottom: 2rem;">
@@ -19,8 +37,11 @@ include 'header.php';
                 <p class="text-muted">Rejoignez l'équipe pour gérer vos tickets.</p>
             </div>
 
+            <?php if ($error): ?>
+                <div class="alert alert-danger" style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 5px; margin-bottom: 15px;"><?php echo $error; ?></div>
+            <?php endif; ?>
+
             <form action="register.php" method="POST">
-                
                 <div class="d-flex gap-1 mobile-col">
                     <div class="form-group flex-1">
                         <label for="prenom">Prénom</label>
@@ -40,11 +61,6 @@ include 'header.php';
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" name="password" placeholder="••••••••" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirm_password">Confirmer le mot de passe</label>
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
                 </div>
 
                 <button type="submit" class="btn mb-1">S'inscrire</button>
