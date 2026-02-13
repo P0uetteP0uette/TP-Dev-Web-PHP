@@ -7,9 +7,24 @@ require_once 'db.php';
 
 $ticket_id = $_GET['id'] ?? 0;
 
-// Requête de sélection complète avec Jointures multiples
+// 1. TRAITEMENT DU FORMULAIRE : AJOUT DE TEMPS
+$messageTemps = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['duree'])) {
+    $duree = floatval($_POST['duree']); // On s'assure que c'est bien un nombre décimal (ex: 1.5)
+    
+    if ($duree > 0) {
+        // On enregistre le temps passé dans la table temps_passe
+        $stmtTemps = $pdo->prepare("INSERT INTO temps_passe (ticket_id, user_id, duree_heures) VALUES (?, ?, ?)");
+        $stmtTemps->execute([$ticket_id, $_SESSION['user']['id'], $duree]);
+        $messageTemps = "Temps ajouté avec succès !";
+    }
+}
+
+// 2. RECUPERATION DU TICKET ET DU TEMPS TOTAL DE CE TICKET
+// On ajoute une sous-requête pour calculer automatiquement la somme des heures de ce ticket
 $stmt = $pdo->prepare("
-    SELECT t.*, p.nom AS projet_nom, c.nom_entreprise AS client_nom, CONCAT(u.prenom, ' ', u.nom) AS auteur
+    SELECT t.*, p.nom AS projet_nom, c.nom_entreprise AS client_nom, CONCAT(u.prenom, ' ', u.nom) AS auteur,
+           (SELECT COALESCE(SUM(duree_heures), 0) FROM temps_passe WHERE ticket_id = t.id) AS temps_total_ticket
     FROM tickets t
     JOIN projects p ON t.projet_id = p.id
     JOIN contrats ctr ON p.contrat_id = ctr.id
@@ -82,9 +97,33 @@ include 'header.php';
                         <li><strong>Priorité</strong> <span><?php echo htmlspecialchars($ticket['priorite']); ?></span></li>
                         <li><strong>Client</strong> <span><?php echo htmlspecialchars($ticket['client_nom']); ?></span></li>
                         <li><strong>Projet</strong> <span><?php echo htmlspecialchars($ticket['projet_nom']); ?></span></li>
-                        <li><strong>Créé le</strong> <span><?php echo htmlspecialchars($ticket['date_creation']); ?></span></li>
+                        <li><strong>Créé le</strong> <span><?php echo date('d/m/Y', strtotime($ticket['date_creation'])); ?></span></li>
                     </ul>
                 </div>
+
+                <div class="card">
+                    <h2>Suivi du temps</h2>
+                    
+                    <?php if ($messageTemps): ?>
+                        <div class="alert alert-success" style="background: #d1fae5; color: #065f46; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 0.9rem;">
+                            <?php echo $messageTemps; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <ul class="info-list">
+                        <li><strong>Temps total passé</strong> <span class="text-primary" style="font-weight: bold; font-size: 1.1rem;"><?php echo $ticket['temps_total_ticket']; ?> h</span></li>
+                    </ul>
+
+                    <form action="ticket-detail.php?id=<?php echo $ticket['id']; ?>" method="POST" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                        <label for="duree" style="font-size: 0.85rem; font-weight: bold; display: block; margin-bottom: 5px;">Pointer des heures :</label>
+                        <div class="d-flex gap-1">
+                            <input type="number" step="0.5" min="0.5" id="duree" name="duree" placeholder="Ex: 1.5" required style="flex: 1; padding: 5px;">
+                            <button type="submit" class="btn btn-sm">Ajouter</button>
+                        </div>
+                        <small class="text-muted" style="display: block; margin-top: 5px;">(Par tranches de 0.5h)</small>
+                    </form>
+                </div>
+
             </aside>
         </div>
     </main>
