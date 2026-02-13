@@ -7,22 +7,28 @@ require_once 'db.php';
 
 // 1. TRAITEMENT DE LA CRÉATION DE PROJET (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nom']) && !empty($_POST['client_id'])) {
-    // Étape A : Créer le contrat
     $stmtContrat = $pdo->prepare("INSERT INTO contrats (client_id, nom_contrat, heures_incluses, taux_horaire) VALUES (?, ?, ?, ?)");
     $nomContrat = "Contrat " . $_POST['nom'];
     $stmtContrat->execute([$_POST['client_id'], $nomContrat, $_POST['heures'], $_POST['taux']]);
-    
-    // On récupère l'ID du contrat qu'on vient de créer
     $contrat_id = $pdo->lastInsertId();
 
-    // Étape B : Créer le projet lié à ce contrat
     $stmtProjet = $pdo->prepare("INSERT INTO projects (contrat_id, nom, description) VALUES (?, ?, ?)");
     $stmtProjet->execute([$contrat_id, $_POST['nom'], $_POST['description']]);
 
     $messageSucces = "Le projet a été créé et enregistré dans la base de données !";
 }
 
-// 2. RECUPERATION DES PROJETS DEPUIS LA BDD
+// 2. GESTION DU FILTRE VIA L'URL (?filter=...)
+$filter = $_GET['filter'] ?? 'all';
+$whereSQL = "";
+
+if ($filter === 'actif') {
+    $whereSQL = " WHERE p.statut = 'Actif'";
+} elseif ($filter === 'epuise') {
+    $whereSQL = " WHERE p.statut = 'Épuisé'";
+}
+
+// 3. RECUPERATION DES PROJETS AVEC LE FILTRE
 $sql = "
     SELECT p.id, p.nom, p.description, p.statut, c.nom_entreprise AS client, ctr.heures_incluses AS heures_total,
            COALESCE(SUM(tp.duree_heures), 0) AS heures_utilisees
@@ -31,6 +37,7 @@ $sql = "
     JOIN clients c ON ctr.client_id = c.id
     LEFT JOIN tickets t ON t.projet_id = p.id
     LEFT JOIN temps_passe tp ON tp.ticket_id = t.id
+    $whereSQL
     GROUP BY p.id
     ORDER BY p.id DESC
 ";
@@ -69,6 +76,12 @@ include 'header.php';
                 <?php echo $messageSucces; ?>
             </div>
         <?php endif; ?>
+
+        <div class="d-flex gap-1 mb-1" style="flex-wrap: wrap;">
+            <a href="projects.php?filter=all" class="btn btn-sm <?php echo $filter === 'all' ? 'active' : ''; ?>" style="background:#64748b; color: white; text-decoration: none;">Tout voir</a>
+            <a href="projects.php?filter=actif" class="btn btn-sm <?php echo $filter === 'actif' ? 'active' : ''; ?>" style="background:#22c55e; color: white; text-decoration: none;">Actifs</a>
+            <a href="projects.php?filter=epuise" class="btn btn-sm <?php echo $filter === 'epuise' ? 'active' : ''; ?>" style="background:#ef4444; color: white; text-decoration: none;">Épuisés</a>
+        </div>
 
         <div class="table-container">
             <table class="w-100">
@@ -109,6 +122,10 @@ include 'header.php';
                         <td data-label="Actions"><a href="project-detail.php?id=<?php echo $projet['id']; ?>" class="btn btn-sm btn-light">Détails</a></td>
                     </tr>
                     <?php endforeach; ?>
+
+                    <?php if (empty($projects)): ?>
+                        <tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun projet trouvé pour ce filtre.</td></tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

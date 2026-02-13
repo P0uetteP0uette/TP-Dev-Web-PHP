@@ -7,20 +7,28 @@ require_once 'db.php';
 
 // 1. TRAITEMENT DE LA CRÉATION DE TICKET (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['titre'])) {
-    // Requête préparée pour l'insertion
     $stmt = $pdo->prepare("INSERT INTO tickets (projet_id, auteur_id, titre, description, priorite, type) VALUES (?, ?, ?, ?, ?, ?)");
-    // On met l'ID 1 pour l'auteur (l'admin créé dans le SQL par défaut)
-    $stmt->execute([$_POST['projet_id'], 1, $_POST['titre'], $_POST['description'], $_POST['priorite'], $_POST['type']]);
-    
+    $stmt->execute([$_POST['projet_id'], $_SESSION['user']['id'], $_POST['titre'], $_POST['description'], $_POST['priorite'], $_POST['type']]);
     $messageSucces = "Ticket enregistré en base de données !";
 }
 
-// 2. RECUPERATION DES TICKETS (Avec le nom du projet et de l'auteur)
+// 2. GESTION DU FILTRE VIA L'URL (?filter=...)
+$filter = $_GET['filter'] ?? 'all'; // Par défaut, on affiche 'all' (Tout voir)
+$whereSQL = "";
+
+if ($filter === 'facturable') {
+    $whereSQL = " WHERE t.type = 'facturable'";
+} elseif ($filter === 'inclus') {
+    $whereSQL = " WHERE t.type = 'inclus'";
+}
+
+// 3. RECUPERATION DES TICKETS AVEC LE FILTRE APPLIQUÉ
 $sql = "
     SELECT t.*, p.nom AS projet_nom, CONCAT(u.prenom, ' ', u.nom) AS auteur 
     FROM tickets t 
     JOIN projects p ON t.projet_id = p.id 
     JOIN users u ON t.auteur_id = u.id 
+    $whereSQL
     ORDER BY t.date_creation DESC
 ";
 $tickets = $pdo->query($sql)->fetchAll();
@@ -59,6 +67,12 @@ include 'header.php';
             </div>
         <?php endif; ?>
 
+        <div class="d-flex gap-1 mb-1" style="flex-wrap: wrap;">
+            <a href="tickets.php?filter=all" class="btn btn-sm <?php echo $filter === 'all' ? 'active' : ''; ?>" style="background:#64748b; color: white; text-decoration: none;">Tout voir</a>
+            <a href="tickets.php?filter=facturable" class="btn btn-sm <?php echo $filter === 'facturable' ? 'active' : ''; ?>" style="background:#ef4444; color: white; text-decoration: none;">Facturable</a>
+            <a href="tickets.php?filter=inclus" class="btn btn-sm <?php echo $filter === 'inclus' ? 'active' : ''; ?>" style="background:#64748b; color: white; text-decoration: none;">Inclus</a>
+        </div>
+
         <div class="table-container">
             <table class="w-100">
                 <thead>
@@ -87,6 +101,10 @@ include 'header.php';
                         <td data-label="Actions"><a href="ticket-detail.php?id=<?php echo $ticket['id']; ?>" class="btn btn-sm btn-light">Voir</a></td>
                     </tr>
                     <?php endforeach; ?>
+                    
+                    <?php if (empty($tickets)): ?>
+                        <tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun ticket trouvé pour ce filtre.</td></tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
